@@ -53,7 +53,7 @@ class _CheckoutPageCartState extends State<CheckoutPageCart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Checkout'), centerTitle: true),
+      appBar: AppBar(title:  Text('Checkout', style: GoogleFonts.nunito(color: Colors.black, fontWeight: FontWeight.bold),), centerTitle: true, backgroundColor: Colors.white, actionsIconTheme: IconThemeData(color: Colors.black),),
       body: Consumer<CartProvider>(
         builder: (context, cartProvider, _) {
           if (cartProvider.cart.isEmpty) {

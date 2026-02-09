@@ -11,12 +11,16 @@ class WebDrawer extends StatefulWidget {
 }
 
 class _WebDrawerState extends State<WebDrawer> {
+  bool selectHome = false;
+  bool selectSearch = false;
+  bool selectCart = false;
+  bool selectProfile = false;
   @override
   Widget build(BuildContext context) {
     return Drawer(
       shape: const BeveledRectangleBorder(),
       child: Container(
-        color: Theme.of(context).colorScheme.onSurface,
+        color: Theme.of(context).colorScheme.background,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,7 +32,7 @@ class _WebDrawerState extends State<WebDrawer> {
                   style: GoogleFonts.nunito(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
               ),
@@ -42,13 +46,35 @@ class _WebDrawerState extends State<WebDrawer> {
                         'HOME',
                         Icons.home,
                         "",
-                        false
+                        false,
+                        selectHome,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(19, 4, 19, 4),
+                      child: const Divider(
+                        color: Colors.black,
+                        height: 0.5,
+                        thickness: 0.5,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: HoverableButton('SEARCH', Icons.search, "search",
-                        false),
+                      child: HoverableButton(
+                        'SEARCH',
+                        Icons.search,
+                        "search",
+                        false,
+                        selectSearch,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(19, 4, 19, 4),
+                      child: const Divider(
+                        color: Colors.black,
+                        height: 0.5,
+                        thickness: 0.5,
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -56,8 +82,16 @@ class _WebDrawerState extends State<WebDrawer> {
                         'CART',
                         Icons.shopping_cart_checkout,
                         "cart",
-                        false
-                        
+                        false,
+                        selectCart,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(19, 4, 19, 4),
+                      child: const Divider(
+                        color: Colors.black,
+                        height: 0.5,
+                        thickness: 0.5,
                       ),
                     ),
                     Padding(
@@ -66,14 +100,35 @@ class _WebDrawerState extends State<WebDrawer> {
                         'PROFILE',
                         Icons.person_2_rounded,
                         "profile",
-                        false
+                        false,
+                        selectProfile,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(19, 4, 19, 4),
+                      child: const Divider(
+                        color: Colors.black,
+                        height: 0.5,
+                        thickness: 0.5,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: HoverableButton('LOG OUT', Icons.logout, "",
-                        true),
-                      
+                      child: HoverableButton(
+                        'LOG OUT',
+                        Icons.logout,
+                        "",
+                        true,
+                        false,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(19, 4, 19, 4),
+                      child: const Divider(
+                        color: Colors.black,
+                        height: 0.5,
+                        thickness: 0.5,
+                      ),
                     ),
                   ],
                 ),
@@ -84,25 +139,51 @@ class _WebDrawerState extends State<WebDrawer> {
       ),
     );
   }
-  Widget HoverableButton(String content, IconData icon, String dest, bool isLogout) {
+
+  Widget HoverableButton(
+    String content,
+    IconData icon,
+    String dest,
+    bool isLogout,
+    bool isSelected,
+  ) {
     return Material(
-      color: Colors.transparent,
+      color: isSelected 
+        ? Theme.of(context).colorScheme.surface 
+        : Colors.transparent,
       borderRadius: BorderRadius.circular(12),
 
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14),
         child: InkWell(
-          onTap: () => {
-            if(!isLogout){
-              context.go('/$dest')
+          onTap: () {
+            setState(() {
+            // Resetting all selections
+            selectHome = false;
+            selectSearch = false;
+            selectCart = false;
+            selectProfile = false;
+            
+            // Setting based on selection
+            if (dest == "") {
+              selectHome = true;
+            } else if (dest == "search") {
+              selectSearch = true;
+            } else if (dest == "cart") {
+              selectCart = true;
+            } else if (dest == "profile") {
+              selectProfile = true;
             }
-            else{
-              print("logout tapped"),
-              logoutweb(context)
+          });
+            if (!isLogout) {
+              context.go('/$dest');
+            } else {
+              print("logout tapped");
+              logoutweb(context);
             }
           },
           borderRadius: BorderRadius.circular(12),
-          hoverColor: Theme.of(context).colorScheme.onBackground,
+          hoverColor: Theme.of(context).colorScheme.surface,
 
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -110,18 +191,14 @@ class _WebDrawerState extends State<WebDrawer> {
               // crossAxisAlignment: CrossAxisAlignment.,
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  icon,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  size: 18,
-                ),
+                Icon(icon, color: Colors.black, size: 18),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     content,
                     style: GoogleFonts.nunito(
                       fontSize: 16,
-                      color: Colors.white,
+                      color: Colors.black,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

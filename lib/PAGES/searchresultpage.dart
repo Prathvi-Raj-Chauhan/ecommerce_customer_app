@@ -151,9 +151,9 @@ class _SearchResultPageState extends State<SearchResultPage> {
               if (product.thumbnail != null) {
                 if (product.thumbnail != "https://dummyjson.com/image/150") {
                   if (!kIsWeb) {
-                    url = "http://192.168.56.1:3000${product.thumbnail}";
+                    url = "${product.thumbnail}";
                   } else {
-                    url = "https://localhost${product.thumbnail}";
+                    url = "${product.thumbnail}";
                   }
                 }
               }

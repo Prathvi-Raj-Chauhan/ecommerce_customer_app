@@ -8,6 +8,7 @@ class OrderListModel {
   List<OrderProduct> prods;
   String status;
   DateTime placedAt;
+  String? imageUrl;
 
   OrderListModel({
     required this.address,
@@ -15,17 +16,21 @@ class OrderListModel {
     required this.prods,
     required this.status,
     required this.totalAmount,
-    required this.placedAt
+    required this.placedAt,
+    this.imageUrl
   });
 
   factory OrderListModel.fromJson(Map<String, dynamic> json) {
     return OrderListModel(
       address: Address.fromJson(json['address']),
       id: json['_id'],
-      prods: (json['products'] as List).map((item) => OrderProduct.fromJson(item['product'])).toList(),
+      prods: (json['products'] as List)
+          .map((item) => OrderProduct.fromJson(item['product']))
+          .toList(),
       status: json['status'],
       totalAmount: json['totalAmount'],
-      placedAt: DateTime.parse(json['createdAt'])
+      placedAt: DateTime.parse(json['createdAt']),
+      imageUrl: json['products'][0]['product']['imageURLs'][0] ?? "https://dummyjson.com/image/150"
     );
   }
 }

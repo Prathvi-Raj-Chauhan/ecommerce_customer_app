@@ -39,79 +39,186 @@ class _AuthDialogState extends State<AuthDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 8,
       child: Container(
-        width: 400,
+        width: 420,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white,
+              Colors.grey.shade50,
+            ],
+          ),
+        ),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(32),
           child: SingleChildScrollView(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                /// Title
+                /// Icon and Title
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    wantsLogin ? Icons.login_rounded : Icons.person_add_rounded,
+                    size: 40,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                
+                const SizedBox(height: 20),
+                
                 Text(
-                  wantsLogin ? 'Login' : 'Register',
+                  wantsLogin ? 'Welcome Back' : 'Create Account',
                   style: GoogleFonts.nunito(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+                
+                const SizedBox(height: 8),
+                
+                Text(
+                  wantsLogin 
+                    ? 'Sign in to continue shopping' 
+                    : 'Sign up to get started',
+                  style: GoogleFonts.nunito(
+                    fontSize: 14,
+                    color: Colors.grey.shade600,
                   ),
                 ),
 
-                const SizedBox(height: 25),
+                const SizedBox(height: 32),
 
+                /// Name Field
                 if (!wantsLogin)
                   TextField(
                     controller: _namecontroller,
                     decoration: InputDecoration(
-                      labelText: 'Name',
+                      labelText: 'Full Name',
+                      prefixIcon: Icon(Icons.person_outline, size: 22),
+                      filled: true,
+                      fillColor: Colors.grey.shade50,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).primaryColor,
+                          width: 2,
+                        ),
                       ),
                     ),
                   ),
-                if (!wantsLogin) const SizedBox(height: 12),
+                if (!wantsLogin) const SizedBox(height: 16),
 
-                /// Email
+                /// Email Field
                 TextField(
                   controller: _emailcontroller,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Email',
+                    prefixIcon: Icon(Icons.email_outlined, size: 22),
+                    filled: true,
+                    fillColor: Colors.grey.shade50,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                        width: 2,
+                      ),
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
 
-                /// Password
+                /// Password Field
                 TextField(
                   controller: _passwordcontroller,
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Password',
+                    prefixIcon: Icon(Icons.lock_outline, size: 22),
+                    filled: true,
+                    fillColor: Colors.grey.shade50,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                        width: 2,
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
+                
+                const SizedBox(height: 16),
+                
+                /// Confirm Password Field
                 if (!wantsLogin)
                   TextField(
                     controller: _cnfpasswordcontroller,
                     obscureText: true,
                     decoration: InputDecoration(
-                      labelText: 'Password',
+                      labelText: 'Confirm Password',
+                      prefixIcon: Icon(Icons.lock_outline, size: 22),
+                      filled: true,
+                      fillColor: Colors.grey.shade50,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).primaryColor,
+                          width: 2,
+                        ),
                       ),
                     ),
                   ),
 
-                const SizedBox(height: 50),
+                const SizedBox(height: 32),
 
                 /// Submit Button
                 SizedBox(
-                  width: 220,
+                  width: double.infinity,
+                  height: 50,
                   child: ElevatedButton(
                     onPressed: isLoading
                         ? null
@@ -138,37 +245,90 @@ class _AuthDialogState extends State<AuthDialog> {
                             setState(() => isLoading = false);
 
                             if (success) {
-                              Navigator.of(context).pop(true); // ✅ close dialog
+                              Navigator.of(context).pop(true);
                             }
                           },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                     child: isLoading
                         ? const SizedBox(
-                            height: 20,
-                            width: 20,
+                            height: 24,
+                            width: 24,
                             child: CircularProgressIndicator(
-                              strokeWidth: 2,
+                              strokeWidth: 2.5,
                               color: Colors.white,
                             ),
                           )
-                        : Text(wantsLogin ? "Login" : "Register"),
+                        : Text(
+                            wantsLogin ? "Sign In" : "Create Account",
+                            style: GoogleFonts.nunito(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
+
+                /// Divider
+                Row(
+                  children: [
+                    Expanded(child: Divider(color: Colors.grey.shade300)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'or',
+                        style: GoogleFonts.nunito(
+                          color: Colors.grey.shade600,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                    Expanded(child: Divider(color: Colors.grey.shade300)),
+                  ],
+                ),
+
+                const SizedBox(height: 16),
 
                 /// Switch Login/Register
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      wantsLogin = !wantsLogin;
-                    });
-                  },
-                  child: Text(
-                    wantsLogin
-                        ? "Don't have an account? Register"
-                        : "Already have an account? Login",
-                    style: GoogleFonts.nunito(),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      wantsLogin
+                          ? "Don't have an account?"
+                          : "Already have an account?",
+                      style: GoogleFonts.nunito(
+                        color: Colors.grey.shade600,
+                        fontSize: 14,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          wantsLogin = !wantsLogin;
+                        });
+                      },
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                      ),
+                      child: Text(
+                        wantsLogin ? "Sign Up" : "Sign In",
+                        style: GoogleFonts.nunito(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

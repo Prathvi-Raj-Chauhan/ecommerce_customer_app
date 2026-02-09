@@ -68,7 +68,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Checkout'), centerTitle: true),
+      appBar: AppBar(title:  Text('Checkout', style: GoogleFonts.nunito(color: Colors.black, fontWeight: FontWeight.bold),), centerTitle: true, backgroundColor: Colors.white, actionsIconTheme: IconThemeData(color: Colors.black),),
       body: FutureBuilder<DetailedProduct?>(
         future: _productFuture,
         builder: (context, snapshot) {

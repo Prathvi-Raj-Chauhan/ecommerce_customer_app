@@ -3,6 +3,7 @@ import 'package:ecommerce_customer/PAGES/cart.dart';
 import 'package:ecommerce_customer/PAGES/checkoutpage.dart';
 import 'package:ecommerce_customer/PAGES/checkoutpagecart.dart';
 import 'package:ecommerce_customer/PAGES/homepage.dart';
+import 'package:ecommerce_customer/PAGES/notificationHistory.dart';
 import 'package:ecommerce_customer/PAGES/orderHistoryPage.dart';
 import 'package:ecommerce_customer/PAGES/productpage.dart';
 import 'package:ecommerce_customer/PAGES/profile.dart';
@@ -67,6 +68,12 @@ final GoRouter router = GoRouter(
           path: '/checkout-cart',
           builder: (context, state) {
             return CheckoutPageCart();
+          },
+        ),
+        GoRoute(
+          path: '/notifications',
+          builder: (context, state) {
+            return NotificationHistory();
           },
         ),
       ],

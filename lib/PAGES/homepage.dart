@@ -4,6 +4,7 @@ import 'package:ecommerce_customer/FireBase%20Services/notification_service.dart
 import 'package:ecommerce_customer/MODELS/HomeProducts.dart';
 import 'package:ecommerce_customer/PROVIDER/CartProvider.dart';
 import 'package:ecommerce_customer/PROVIDER/HomeProductsProvider.dart';
+import 'package:ecommerce_customer/PROVIDER/NotificationProvider.dart';
 import 'package:ecommerce_customer/SERVICES/dioclient.dart';
 import 'package:ecommerce_customer/SERVICES/getUserInstance.dart';
 import 'package:ecommerce_customer/theme/theme.dart';
@@ -43,63 +44,53 @@ class _HomePageState extends State<HomePage> {
     Future.microtask(() {
       context.read<HomeProductsProvider>().fetchProducts();
     });
-    final fcmToken = NotificationService().getDeviceToken().then((value) {
-      print("FCMToken $value");
-    });
+    if (!kIsWeb) {
+      final fcmToken = NotificationService().getDeviceToken().then((value) {
+        print("FCMToken $value");
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      initialIndex: 0,
+    return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 70,
-          backgroundColor: Colors.white,
-          elevation: 0,
-          flexibleSpace: _customHeader(),
-          bottom: const PreferredSize(
-            preferredSize: Size.fromHeight(80),
-            child: _HomeTabs(),
-          ),
-        ),
+        // appBar: AppBar(
+        //   // toolbarHeight: 70,
+        //   backgroundColor: Colors.white,
+        //   elevation: 0,
+        //   flexibleSpace: _customHeader(),
+        // ),
         body: RefreshIndicator(
           onRefresh: () async {
             await context.read<HomeProductsProvider>().fetchProducts(
               forceRefresh: true,
             );
           },
-          child: TabBarView(
-            children: [
-              Consumer<HomeProductsProvider>(
-                builder: (context, provider, _) {
-                  if (provider.isLoading) {
-                    return LoadingScreen();
-                  }
-
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _section('New Arrivals 🚀', provider.newArrivals),
-                          _section('Hot Picks 🔥', provider.hotProducts),
-                          _section('Top Sellers 📈', provider.topSellers),
-                          _section('On Sale 👜', provider.topDiscounts),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text('LOGIN BUTTON'),
-                style: ElevatedButton.styleFrom(maximumSize: Size(65, 41)),
-              ),
-            ],
+          child: Consumer<HomeProductsProvider>(
+            builder: (context, provider, _) {
+              if (provider.isLoading) {
+                return LoadingScreen();
+              }
+      
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // const SizedBox(height: 5,),
+                       _customHeader(),
+                      const SizedBox(height: 20,),
+                      _section('New Arrivals 🚀', provider.newArrivals),
+                      _section('Hot Picks 🔥', provider.hotProducts),
+                      _section('Top Sellers 📈', provider.topSellers),
+                      _section('On Sale 👜', provider.topDiscounts),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -280,7 +271,7 @@ class _HomePageState extends State<HomePage> {
       children: [
         Text(
           title,
-          style: GoogleFonts.nunito(fontSize: 18, fontWeight: FontWeight.w600),
+          style: GoogleFonts.nunito(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -312,58 +303,104 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _customHeader() {
+Widget _customHeader() {
     String? userName = context.watch<User>().user?.name;
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       color: Colors.white,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const CircleAvatar(child: Icon(Icons.person)),
-              const SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
+              Row(
                 children: [
-                  userName != null
-                      ? Text(
-                          'Hi, ${userName}',
-                          style: GoogleFonts.nunito(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      : loginButton(),
+                  const CircleAvatar(child: Icon(Icons.person)),
+                  const SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      userName != null
+                          ? Text(
+                              'Hi, ${userName}',
+                              style: GoogleFonts.nunito(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : loginButton(),
 
-                  Padding(
-                    padding: userName == null
-                        ? EdgeInsets.symmetric(horizontal: 18.0)
-                        : EdgeInsets.all(0),
-                    child: Text(
-                      "Let's go shopping",
-                      style: GoogleFonts.nunito(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
+                      Padding(
+                        padding: userName == null
+                            ? EdgeInsets.symmetric(horizontal: 18.0)
+                            : EdgeInsets.all(0),
+                        child: Text(
+                          "Let's go shopping",
+                          style: GoogleFonts.nunito(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  // Notification button with badge
+                  Consumer<NotificationProvider>(
+                    builder: (context, notificationProvider, _) {
+                      return Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              // Clear badge when opening notifications
+                              notificationProvider.clearUnread();
+                              context.push('/notifications');
+                            },
+                            icon: const Icon(Icons.notifications_none_rounded),
+                          ),
+                          // Badge
+                          if (notificationProvider.hasUnread)
+                            Positioned(
+                              right: 8,
+                              top: 8,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 16,
+                                  minHeight: 16,
+                                ),
+                                child: Text(
+                                  notificationProvider.unreadCount > 9
+                                      ? '9+'
+                                      : '${notificationProvider.unreadCount}',
+                                  style: GoogleFonts.nunito(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),
             ],
           ),
-          Row(
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.notifications_none_rounded),
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -373,9 +410,9 @@ class _HomePageState extends State<HomePage> {
     if (product.thumbnail != null) {
       if (product.thumbnail != "https://dummyjson.com/image/150") {
         if (!kIsWeb) {
-          url = "http://192.168.56.1:3000${product.thumbnail}";
+          url = "${product.thumbnail}";
         } else {
-          url = "https://localhost${product.thumbnail}";
+          url = "${product.thumbnail}";
         }
       }
     }
@@ -669,26 +706,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
       },
-    );
-  }
-}
-
-class _HomeTabs extends StatelessWidget {
-  const _HomeTabs();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white, // ✅ White TabBar background
-      child: const TabBar(
-        labelColor: Colors.black,
-        unselectedLabelColor: Colors.grey,
-        indicatorColor: Colors.black,
-        tabs: [
-          Tab(text: "Home"),
-          Tab(text: "Categories"),
-        ],
-      ),
     );
   }
 }

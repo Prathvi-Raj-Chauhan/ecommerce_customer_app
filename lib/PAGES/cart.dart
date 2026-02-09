@@ -76,8 +76,9 @@ class CartItemTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 251, 245),
+        color: const Color.fromARGB(255, 255, 255, 255),
         borderRadius: BorderRadius.circular(14),
+        border: BoxBorder.all(color: Colors.grey),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -90,13 +91,13 @@ class CartItemTile extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Icon(Icons.image),
-            // child: Image.network(
-            //   item.product.images[0],
-            //   height: 80,
-            //   width: 80,
-            //   fit: BoxFit.cover,
-            // ),
+            // child: Icon(Icons.image),
+            child: Image.network(
+              item.product.imageURLs[0],
+              height: 80,
+              width: 80,
+              fit: BoxFit.cover,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -107,13 +108,11 @@ class CartItemTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      item.product.name,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+                    Flexible(
+                      child: Text(
+                        item.product.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Row(
@@ -122,7 +121,7 @@ class CartItemTile extends StatelessWidget {
                           "₹${item.product.price}",
                           style: const TextStyle(
                             fontSize: 16,
-                            color: Colors.red,
+                            color: Colors.grey,
                             decoration: TextDecoration.lineThrough,
                           ),
                         ),
@@ -132,7 +131,7 @@ class CartItemTile extends StatelessWidget {
                           "₹${item.product.discountedPrice}",
                           style: const TextStyle(
                             fontSize: 18,
-                            color: Colors.green,
+                            color: Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -275,6 +274,7 @@ class CartSummary extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
+            overflow: TextOverflow.fade,
             title,
             style: TextStyle(
               fontSize: 14,

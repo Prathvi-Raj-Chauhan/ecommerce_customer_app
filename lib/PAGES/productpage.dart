@@ -301,7 +301,9 @@ class _ProductpageState extends State<Productpage> {
               color: Colors.green,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 18),
+          Text('Description', style:  GoogleFonts.nunito(fontSize: 20, fontWeight: FontWeight.bold),),
+          const SizedBox(height: 10),
           Text(
             product.description ?? "",
             style: const TextStyle(color: Colors.black54),
@@ -407,7 +409,7 @@ class _ProductpageState extends State<Productpage> {
       items: images.map((url) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Image.network("https://localhost${url}", width: double.infinity, fit: BoxFit.cover),
+          child: Image.network("${url}", width: double.infinity, fit: BoxFit.cover),
         );
       }).toList(),
       options: CarouselOptions(

@@ -1,6 +1,7 @@
 import 'package:ecommerce_customer/FireBase%20Services/notification_service.dart';
 import 'package:ecommerce_customer/PROVIDER/CartProvider.dart';
 import 'package:ecommerce_customer/PROVIDER/HomeProductsProvider.dart';
+import 'package:ecommerce_customer/PROVIDER/NotificationProvider.dart';
 import 'package:ecommerce_customer/ROUTER/router.dart';
 import 'package:ecommerce_customer/SCREEN/HomeScreen.dart';
 import 'package:ecommerce_customer/SERVICES/dioclient.dart';
@@ -18,11 +19,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  if(!kIsWeb){
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    await FirebaseMessaging.instance.setAutoInitEnabled(true);  
+  }
   await dotenv.load(fileName: ".env");
-  await FirebaseMessaging.instance.setAutoInitEnabled(true);
   runApp(MyApp());
 }
 
@@ -46,10 +48,17 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    NotificationService().requestNotificationPermission();
-    NotificationService().firebaseInit(context);
-    NotificationService().setupInteractMessage(context);
-    NotificationService().isTokenRefresh();
+    if(!kIsWeb){
+          Future.microtask(() {
+      NotificationService.setNotificationProvider(
+        context.read<NotificationProvider>()
+      );
+    });
+      NotificationService().requestNotificationPermission();
+      NotificationService().firebaseInit(context);
+      NotificationService().setupInteractMessage(context);
+      NotificationService().isTokenRefresh();
+    }
     Dioclient.init();
     Future.microtask(() => setUser());
   }
@@ -58,6 +67,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider.value(value: User()),
         ChangeNotifierProvider(create: (_) => HomeProductsProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),

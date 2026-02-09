@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:ecommerce_customer/PAGES/orderHistoryPage.dart';
+import 'package:ecommerce_customer/PROVIDER/NotificationProvider.dart';
 import 'package:ecommerce_customer/SERVICES/dioclient.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -18,6 +19,11 @@ class NotificationService {
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+    static NotificationProvider? _notificationProvider;
+
+  static void setNotificationProvider(NotificationProvider provider) {
+    _notificationProvider = provider;
+  }
   void initLocalNotifications(
     BuildContext context,
     RemoteMessage message,
@@ -61,9 +67,13 @@ class NotificationService {
   }
 
   void firebaseInit(BuildContext context) {
-    FirebaseMessaging.onMessage.listen((message) {
+      FirebaseMessaging.onMessage.listen((message) {
       print(message.notification!.title.toString());
       print(message.notification!.body.toString());
+      
+      // Increment unread notification count
+      _notificationProvider?.incrementUnread();
+      
       initLocalNotifications(context, message);
       showNotification(message);
     });

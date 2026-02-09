@@ -36,7 +36,7 @@ class _YourOrdersState extends State<YourOrders> {
       var re = await Dioclient.dio.get('/orderHistory');
       final res = re.data;
       final List ord = res['orders'];
-      final fetched = ord.map((item) => OrderListModel.fromJson(item));
+      final fetched = ord.map((item) => OrderListModel.fromJson(item)).toList();
       setState(() {
         orders.clear();
         orders.addAll(fetched);
@@ -55,21 +55,23 @@ class _YourOrdersState extends State<YourOrders> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(height: 10),
-          Center(
-            child: Text(
-              'Your Orders',
-              style: GoogleFonts.nunito(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+          children: [
+            const SizedBox(height: 10),
+            Center(
+              child: Text(
+                'Your Orders',
+                style: GoogleFonts.nunito(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                ),
               ),
             ),
-          ),
-          orderList(),
-        ],
+            orderList(),
+          ],
+        ),
       ),
     );
   }
@@ -132,11 +134,15 @@ class _YourOrdersState extends State<YourOrders> {
                   ),
                   Row(
                     children: [
-                      Icon(Icons.image, size: 35),
-                      const SizedBox(width: 5),
-                      Icon(Icons.image, size: 35),
-                      const SizedBox(width: 5),
-                      Icon(Icons.image, size: 35),
+                      Container(
+                        height: 50,
+                        width: 50,
+                        child: ClipRRect(
+                          
+                          child: Image.network("${order.imageUrl}", fit: BoxFit.cover,),
+                        ),
+                      ),
+
                     ],
                   ),
                 ],
@@ -151,36 +157,4 @@ class _YourOrdersState extends State<YourOrders> {
       ),
     );
   }
-  // Widget orderTile(OrderListModel order) {
-  //   return ListTile(
-  //     isThreeLine: true,
-  //     title: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Text(
-  //           'Order ${order.status}',
-  //           style: GoogleFonts.nunito(fontWeight: FontWeight.bold),
-  //         ),
-  //         Text(
-  //           'Placed at - ${order.placedAt}',
-  //           style: GoogleFonts.nunito(color: Colors.grey, fontSize: 12),
-  //         ),
-  //       ],
-  //     ),
-
-  //     subtitle: Row(
-  //       children: [
-  //         Icon(Icons.image, size: 35),
-  //         const SizedBox(width: 5),
-  //         Icon(Icons.image, size: 35),
-  //         const SizedBox(width: 5),
-  //         Icon(Icons.image, size: 35),
-  //       ],
-  //     ),
-  //     trailing: Text(
-  //       '₹${order.totalAmount}',
-  //       style: GoogleFonts.nunito(fontSize: 18),
-  //     ),
-  //   );
-  // }
-}
+ }

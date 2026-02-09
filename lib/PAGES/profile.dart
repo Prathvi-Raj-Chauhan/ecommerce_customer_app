@@ -18,9 +18,11 @@ class _ProfilePageState extends State<ProfilePage> {
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [const SizedBox(height: 20), headerSection(), options()],
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+          children: [const SizedBox(height: 20), headerSection(), options()],
+        ),
       ),
     );
   }
