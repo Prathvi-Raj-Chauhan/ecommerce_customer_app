@@ -68,7 +68,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:  Text('Checkout', style: GoogleFonts.nunito(color: Colors.black, fontWeight: FontWeight.bold),), centerTitle: true, backgroundColor: Colors.white, actionsIconTheme: IconThemeData(color: Colors.black),),
+      appBar: AppBar(title:  Text('Checkout', style: GoogleFonts.nunito(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.bold),), centerTitle: true, backgroundColor: Theme.of(context).colorScheme.surface, actionsIconTheme: IconThemeData(color: Colors.black),),
       body: FutureBuilder<DetailedProduct?>(
         future: _productFuture,
         builder: (context, snapshot) {
@@ -106,7 +106,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget _productCard(DetailedProduct product) {
     return Card(
       child: ListTile(
-        leading: const Icon(Icons.image, size: 40),
+        leading: ClipRRect(
+          child: Container(
+            child: Image.network(product.imageURLs[0]),
+          ),
+        ),
         title: Text(
           product.name,
           style: GoogleFonts.nunito(fontWeight: FontWeight.bold),

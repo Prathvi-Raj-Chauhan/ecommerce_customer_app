@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               if (provider.isLoading) {
                 return LoadingScreen();
               }
-      
+
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: SingleChildScrollView(
@@ -80,8 +80,8 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // const SizedBox(height: 5,),
-                       _customHeader(),
-                      const SizedBox(height: 20,),
+                      _customHeader(),
+                      const SizedBox(height: 20),
                       _section('New Arrivals 🚀', provider.newArrivals),
                       _section('Hot Picks 🔥', provider.hotProducts),
                       _section('Top Sellers 📈', provider.topSellers),
@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                 style: GoogleFonts.nunito(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
             ),
@@ -183,16 +183,16 @@ class _HomePageState extends State<HomePage> {
                           bottomStart: Radius.circular(20),
                         ),
                         border: BoxBorder.all(
-                          color: CustomerTheme.accent,
+                          color: Theme.of(context).colorScheme.primary,
                           width: 1,
                         ),
                       ),
                       padding: const EdgeInsets.all(8),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                        child: const Text(
+                        child: Text(
                           "-",
-                          style: TextStyle(color: CustomerTheme.accent),
+                          style: TextStyle(color: Theme.of(context).colorScheme.primary),
                         ),
                       ),
                     ),
@@ -226,15 +226,15 @@ class _HomePageState extends State<HomePage> {
                           topEnd: Radius.circular(20),
                           bottomEnd: Radius.circular(20),
                         ),
-                        color: CustomerTheme.accent,
-                        border: BoxBorder.all(color: CustomerTheme.accent),
+                        color: Theme.of(context).primaryColor,
+                        border: BoxBorder.all(color: Theme.of(context).colorScheme.primary),
                       ),
                       padding: const EdgeInsets.all(8),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 6),
-                        child: const Text(
+                        child: Text(
                           "+",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
                         ),
                       ),
                     ),
@@ -297,16 +297,16 @@ class _HomePageState extends State<HomePage> {
       },
       child: Text(
         'Login Now !',
-        style: GoogleFonts.nunito(color: Colors.white),
+        style: GoogleFonts.nunito(color: Theme.of(context).colorScheme.onPrimary),
       ),
       style: ElevatedButton.styleFrom(backgroundColor: CustomerTheme.accent),
     );
   }
 
-Widget _customHeader() {
+  Widget _customHeader() {
     String? userName = context.watch<User>().user?.name;
     return Container(
-      color: Colors.white,
+      color: Colors.transparent,
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -315,7 +315,12 @@ Widget _customHeader() {
             children: [
               Row(
                 children: [
-                  const CircleAvatar(child: Icon(Icons.person)),
+                  InkWell(
+                    onTap: () {
+                      context.push('/profile');
+                    },
+                    child: const CircleAvatar(child: Icon(Icons.person)),
+                  ),
                   const SizedBox(width: 8),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -327,6 +332,7 @@ Widget _customHeader() {
                               style: GoogleFonts.nunito(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface
                               ),
                             )
                           : loginButton(),
@@ -340,7 +346,7 @@ Widget _customHeader() {
                           style: GoogleFonts.nunito(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
                       ),
@@ -422,7 +428,7 @@ Widget _customHeader() {
         onTap: () => {context.push('/product/${product.id}')},
         child: Card(
           elevation: 4,
-          shadowColor: Colors.black26,
+          shadowColor: Theme.of(context).colorScheme.onSecondary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -442,7 +448,7 @@ Widget _customHeader() {
                           borderRadius: BorderRadius.vertical(
                             top: Radius.circular(16),
                           ),
-                          color: Colors.grey.shade100,
+                          color: Theme.of(context).colorScheme.background,
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.vertical(
@@ -528,7 +534,7 @@ Widget _customHeader() {
                               style: GoogleFonts.nunito(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                // color: Colors.black,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -688,8 +694,34 @@ Widget _customHeader() {
               )
             : Expanded(
                 child: OutlinedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    bool isLoggedin = false;
+                    bool check = await checkAuth();
+                    setState(() {
+                      isLoggedin = check;
+                    });
+                    if (!isLoggedin) {
+                      final bool? authSuccess = await showDialog<bool>(
+                        context: context,
+                        builder: (context) {
+                          return AuthDialog(
+                            context: context,
+                            wantsLogin: wantsLogin,
+                          );
+                        },
+                      );
+
+                      if (authSuccess != true) return;
+
+                      check = await checkAuth();
+                      setState(() {
+                        isLoggedin = check;
+                      });
+                    }
+                    else{
+
                     cartProvider.addItemToCart(prodId);
+                    }
                   },
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 10),

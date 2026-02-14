@@ -53,7 +53,18 @@ class _CheckoutPageCartState extends State<CheckoutPageCart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:  Text('Checkout', style: GoogleFonts.nunito(color: Colors.black, fontWeight: FontWeight.bold),), centerTitle: true, backgroundColor: Colors.white, actionsIconTheme: IconThemeData(color: Colors.black),),
+      appBar: AppBar(
+        title: Text(
+          'Checkout',
+          style: GoogleFonts.nunito(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        actionsIconTheme: IconThemeData(color: Colors.black),
+      ),
       body: Consumer<CartProvider>(
         builder: (context, cartProvider, _) {
           if (cartProvider.cart.isEmpty) {
@@ -98,7 +109,23 @@ class _CheckoutPageCartState extends State<CheckoutPageCart> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Icon(Icons.image, size: 40),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child:
+                    product.product.imageURLs.isNotEmpty &&
+                        product.product.imageURLs[0] != null &&
+                        product.product.imageURLs[0].isNotEmpty
+                    ? Image.network(
+                        product.product.imageURLs[0],
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                        errorBuilder: (c, e, s) =>
+                            const Icon(Icons.image_not_supported),
+                      )
+                    : const Icon(Icons.image, size: 60),
+              ),
+
               const SizedBox(width: 12),
 
               // Product name
@@ -214,8 +241,8 @@ class _CheckoutPageCartState extends State<CheckoutPageCart> {
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14),
         ),
-        onPressed: selectedAddress == null 
-            ? null 
+        onPressed: selectedAddress == null
+            ? null
             : () => _showOrderConfirmationDialog(products),
         child: Text(
           'Place Order',
@@ -254,13 +281,15 @@ class _CheckoutPageCartState extends State<CheckoutPageCart> {
                 ),
               ),
               const SizedBox(height: 4),
-              ...products.map((product) => Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: Text(
-                      '• ${product.product.name} (x${product.quantity})',
-                      style: GoogleFonts.nunito(fontSize: 14),
-                    ),
-                  )),
+              ...products.map(
+                (product) => Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text(
+                    '• ${product.product.name} (x${product.quantity})',
+                    style: GoogleFonts.nunito(fontSize: 14),
+                  ),
+                ),
+              ),
               const SizedBox(height: 12),
 
               // Delivery Address
@@ -319,10 +348,7 @@ class _CheckoutPageCartState extends State<CheckoutPageCart> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: Text(
-              'Cancel',
-              style: GoogleFonts.nunito(),
-            ),
+            child: Text('Cancel', style: GoogleFonts.nunito()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -463,8 +489,10 @@ class _CheckoutPageCartState extends State<CheckoutPageCart> {
           ElevatedButton(
             onPressed: () async {
               // Validate fields
-              if (line1.text.isEmpty || city.text.isEmpty || 
-                  state.text.isEmpty || postal.text.isEmpty) {
+              if (line1.text.isEmpty ||
+                  city.text.isEmpty ||
+                  state.text.isEmpty ||
+                  postal.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Please fill all required fields'),
@@ -486,13 +514,13 @@ class _CheckoutPageCartState extends State<CheckoutPageCart> {
               if (address != null) {
                 // Close the dialog first
                 Navigator.pop(dialogContext);
-                
+
                 // Update state and show success message
                 setState(() {
                   _addressFuture = fetchUserAddresses();
                   selectedAddress = address;
                 });
-                
+
                 // Show success message
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

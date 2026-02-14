@@ -16,13 +16,13 @@ class CustomerTheme {
 
     colorScheme: ColorScheme(
       brightness: Brightness.light,
-      primary: accent,
-      onPrimary: Colors.white,
+      primary: accent, //use this
+      onPrimary: Colors.white, //usethis
 
-      secondary: sand,
-      onSecondary: dark2,
+      secondary: Colors.grey, //use this
+      onSecondary: dark2, //use this
 
-      background: cream,
+      background: Colors.white,
       onBackground: dark1,
 
       surface: Colors.white,
@@ -48,34 +48,46 @@ class CustomerTheme {
     ),
   );
 
-  // 🌑 Dark Theme
+
   static final ThemeData darkTheme = ThemeData(
+  brightness: Brightness.dark,
+
+  scaffoldBackgroundColor: dark2,
+
+  colorScheme: const ColorScheme(
     brightness: Brightness.dark,
 
-    scaffoldBackgroundColor: dark2,
+    // Same semantic usage as light theme
+    primary: accent,            // use this
+    onPrimary: Colors.white,    // use this
 
-    colorScheme: ColorScheme(
-      brightness: Brightness.dark,
-      primary: accent,
-      onPrimary: Colors.white,
+    secondary: dark2,             // use this (neutral secondary)
+    onSecondary: dark2,          // use this (dark text/icons)
 
-      secondary: sand,
-      onSecondary: dark1,
+    background: dark2,
+    onBackground: cream,
 
-      background: dark2,
-      onBackground: cream,
+    surface: dark1,
+    onSurface: cream,
 
-      surface: dark1,
-      onSurface: cream,
+    error: Colors.red,
+    onError: Colors.white,
+  ),
 
-      error: Colors.red,
-      onError: Colors.white,
+  appBarTheme: const AppBarTheme(
+    backgroundColor: dark1,
+    foregroundColor: Colors.white,
+    centerTitle: true,
+    elevation: 1,
+  ),
+
+  textTheme: const TextTheme(
+    bodyMedium: TextStyle(color: cream),
+    titleLarge: TextStyle(
+      color: cream,
+      fontWeight: FontWeight.bold,
     ),
+  ),
+);
 
-    appBarTheme: const AppBarTheme(
-      backgroundColor: dark1,
-      foregroundColor: Colors.white,
-      centerTitle: true,
-    ),
-  );
 }

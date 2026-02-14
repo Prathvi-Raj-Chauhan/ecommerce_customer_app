@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:ecommerce_customer/COMPONENTS/AuthDialog.dart';
 import 'package:ecommerce_customer/MODELS/orderListModel.dart';
 import 'package:ecommerce_customer/SERVICES/dioclient.dart';
 import 'package:ecommerce_customer/theme/theme.dart';
@@ -31,6 +32,25 @@ class _YourOrdersState extends State<YourOrders> {
     }
   }
 
+  bool? isLoggedin; // Changed to nullable
+
+  Future<void> checkAuthAndSetState() async {
+    try {
+      var res = await Dioclient.dio.get('/auth-check');
+      setState(() {
+        if (res.statusCode == 401) {
+          isLoggedin = false;
+        } else {
+          isLoggedin = res.data['status'] == true;
+        }
+      });
+    } catch (e) {
+      setState(() {
+        isLoggedin = false;
+      });
+    }
+  }
+
   Future<void> getOrderHistory() async {
     try {
       var re = await Dioclient.dio.get('/orderHistory');
@@ -51,12 +71,19 @@ class _YourOrdersState extends State<YourOrders> {
   void initState() {
     super.initState();
     getOrderHistory();
+    checkAuthAndSetState();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
+      child:  isLoggedin == null
+          ? const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            )
+          : !isLoggedin!
+              ? pleaseLogin()
+              : Scaffold(
         body: Column(
           children: [
             const SizedBox(height: 10),
@@ -77,20 +104,24 @@ class _YourOrdersState extends State<YourOrders> {
   }
 
   Widget orderList() {
-    return Expanded(
-      child: Container(
-        margin: EdgeInsets.all(15),
-        child: ListView.builder(
-          shrinkWrap: true,
+    return orders.length != 0
+        ? Expanded(
+            child: Container(
+              margin: EdgeInsets.all(15),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: orders.length,
 
-          itemBuilder: (context, index) {
-            return orderTile(orders[index]);
-          },
-
-          itemCount: orders.length,
-        ),
-      ),
-    );
+                itemBuilder: (context, index) {
+                  return orderTile(orders[index]);
+                },
+              ),
+            ),
+          )
+        : Container(
+            height: 500,
+            child: Center(child: Text('You Have Not placed any Order yet 👜')),
+          );
   }
 
   Widget orderTile(OrderListModel order) {
@@ -98,13 +129,13 @@ class _YourOrdersState extends State<YourOrders> {
       padding: const EdgeInsets.all(4.0),
       child: InkWell(
         onTap: () {
-          context.go('/order/${order.id}');
+          context.push('/order/${order.id}');
         },
         child: Container(
           margin: EdgeInsets.all(2),
           padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -138,11 +169,12 @@ class _YourOrdersState extends State<YourOrders> {
                         height: 50,
                         width: 50,
                         child: ClipRRect(
-                          
-                          child: Image.network("${order.imageUrl}", fit: BoxFit.cover,),
+                          child: Image.network(
+                            "${order.imageUrl}",
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-
                     ],
                   ),
                 ],
@@ -157,4 +189,36 @@ class _YourOrdersState extends State<YourOrders> {
       ),
     );
   }
- }
+      Widget pleaseLogin() {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min, // 👈 important
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(child: Container(child: Text('Please Login First'))),
+          loginButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget loginButton() {
+    return ElevatedButton(
+      onPressed: () async {
+        await showDialog<bool>(
+          context: context,
+          builder: (context) {
+            return AuthDialog(context: context, wantsLogin: true);
+          },
+        );
+        context.go('/');
+      },
+      child: Text(
+        'Login Now !',
+        style: GoogleFonts.nunito(color: Colors.white),
+      ),
+      style: ElevatedButton.styleFrom(backgroundColor: CustomerTheme.accent),
+    );
+  }
+}

@@ -66,43 +66,50 @@ class _SpecificOrderpageState extends State<SpecificOrderpage> {
     if (isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Order',
-                style: GoogleFonts.nunito(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Order',
+                  style: GoogleFonts.nunito(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
                 ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    'Placed on - ',
-                    style: GoogleFonts.nunito(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                Row(
+                  children: [
+                    Text(
+                      'Placed on - ',
+                      style: GoogleFonts.nunito(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
                     ),
-                  ),
-                  Icon(Icons.calendar_month, size: 12),
-                  Text(
-                    '${order.createdAt}',
-                    style: GoogleFonts.nunito(fontSize: 14),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              basicInfoContainer(),
-              const SizedBox(height: 20),
-              orderItemsContainer(orderProducts),
-              const SizedBox(height: 20),
-            ],
+                    Icon(Icons.calendar_month, size: 12, color: Theme.of(context).colorScheme.onBackground),
+                    Text(
+                      '${order.createdAt}',
+                      style: GoogleFonts.nunito(
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                basicInfoContainer(),
+                const SizedBox(height: 20),
+                orderItemsContainer(orderProducts),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
@@ -115,7 +122,7 @@ class _SpecificOrderpageState extends State<SpecificOrderpage> {
       child: Material(
         elevation: 8,
         borderRadius: BorderRadius.circular(15),
-        color: const Color.fromARGB(255, 242, 242, 242),
+        color: Theme.of(context).colorScheme.surface,
         child: Container(
           margin: EdgeInsets.all(15),
           child: Padding(
@@ -128,38 +135,39 @@ class _SpecificOrderpageState extends State<SpecificOrderpage> {
                   style: GoogleFonts.nunito(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
-                Divider(color: Colors.grey),
+                Divider(color: Theme.of(context).colorScheme.secondary),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [rowTitle('Customer'), customerContent()],
                 ),
-                Divider(color: Colors.grey),
+                Divider(color: Theme.of(context).colorScheme.secondary),
                 Row(children: [rowTitle('Id'), rowContent('${order.id}', false)]),
-                Divider(color: Colors.grey),
+                Divider(color: Theme.of(context).colorScheme.secondary),
                 Row(
                   children: [
                     rowTitle('Date & Time'),
                     rowContent('${order.createdAt}', false),
                   ],
                 ),
-                Divider(color: Colors.grey),
+                Divider(color: Theme.of(context).colorScheme.secondary),
                 Row(
                   children: [
                     rowTitle('Total Amount'),
                     rowContent('${order.totalAmount}', false),
                   ],
                 ),
-                Divider(color: Colors.grey,),
+                Divider(color: Theme.of(context).colorScheme.secondary,),
                 Row(
                   children: [
                     rowTitle('Status'),
                     rowContent('${order.status}', true),
                   ],
                 ),
-                Divider(color: Colors.grey),
+                Divider(color: Theme.of(context).colorScheme.secondary),
           
                 const SizedBox(height: 25),
               ],
@@ -174,7 +182,7 @@ class _SpecificOrderpageState extends State<SpecificOrderpage> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Material(
-        color: const Color.fromARGB(255, 242, 242, 242),
+        color: Theme.of(context).colorScheme.surface,
         elevation: 8,
         borderRadius: BorderRadius.circular(15),
         child: Container(
@@ -189,19 +197,20 @@ class _SpecificOrderpageState extends State<SpecificOrderpage> {
                   style: GoogleFonts.nunito(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 10),
-                Divider(),
+                Divider(color: Theme.of(context).colorScheme.secondary),
           
                 /// TABLE HEADER
                 tableRow(description: 'Product Name', paymentType: 'Payment Method', amount: "Amount", isHeader: true),
-                Divider(),
+                Divider(color: Theme.of(context).colorScheme.secondary),
           
                 ListView.separated(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  separatorBuilder: (context, index) => Divider(),
+                  separatorBuilder: (context, index) => Divider(color: Theme.of(context).colorScheme.secondary),
                   itemCount: orderProducts.length,
                   itemBuilder: (BuildContext context, int index) {
                     return tableRow(
@@ -215,7 +224,7 @@ class _SpecificOrderpageState extends State<SpecificOrderpage> {
                 ),
           
                 const SizedBox(height: 10),
-                Divider(),
+                Divider(color: Theme.of(context).colorScheme.secondary),
               ],
             ),
           ),
@@ -241,7 +250,7 @@ class _SpecificOrderpageState extends State<SpecificOrderpage> {
               description,
               style: GoogleFonts.nunito(
                 fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
-                color: isHeader ? Colors.black : Colors.grey,
+                color: isHeader ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.secondary,
               ),
             ),
           ),
@@ -251,7 +260,7 @@ class _SpecificOrderpageState extends State<SpecificOrderpage> {
               paymentType,
               style: GoogleFonts.nunito(
                 fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
-                color: isHeader ? Colors.black : Colors.grey,
+                color: isHeader ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.secondary,
               ),
             ),
           ),
@@ -262,7 +271,7 @@ class _SpecificOrderpageState extends State<SpecificOrderpage> {
               textAlign: TextAlign.end,
               style: GoogleFonts.nunito(
                 fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
-                color: isHeader ? Colors.black : Colors.grey,
+                color: isHeader ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.secondary,
               ),
             ),
           ),
@@ -276,10 +285,14 @@ class _SpecificOrderpageState extends State<SpecificOrderpage> {
       flex: 4,
       child: Text(
         title,
-        style: GoogleFonts.nunito(fontWeight: FontWeight.bold),
+        style: GoogleFonts.nunito(
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
       ),
     );
   }
+  
   Color statusColor(String str) {
     if (str == "Pending") {
       return const Color.fromARGB(255, 186, 176, 85);
@@ -295,8 +308,17 @@ class _SpecificOrderpageState extends State<SpecificOrderpage> {
       return Colors.greenAccent;
     }
   }
+  
   Widget rowContent(String text, bool isStatus) {
-    return Expanded(flex: 8, child: Text(text, style: GoogleFonts.nunito(color:isStatus ? statusColor(text) : Colors.black)));
+    return Expanded(
+      flex: 8, 
+      child: Text(
+        text, 
+        style: GoogleFonts.nunito(
+          color: isStatus ? statusColor(text) : Theme.of(context).colorScheme.onSurface
+        )
+      )
+    );
   }
 
   Widget customerContent() {
@@ -308,16 +330,22 @@ class _SpecificOrderpageState extends State<SpecificOrderpage> {
         children: [
           Text(
             username,
-            style: GoogleFonts.nunito(fontWeight: FontWeight.bold),
+            style: GoogleFonts.nunito(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
-          Text(address.line1, style: GoogleFonts.nunito(color: Colors.grey)),
+          Text(
+            address.line1, 
+            style: GoogleFonts.nunito(color: Theme.of(context).colorScheme.secondary)
+          ),
           Text(
             '${address.line2} , ${address.city}',
-            style: GoogleFonts.nunito(color: Colors.grey),
+            style: GoogleFonts.nunito(color: Theme.of(context).colorScheme.secondary),
           ),
           Text(
             '${address.state}, ${address.postalCode}, ${address.country}',
-            style: GoogleFonts.nunito(color: Colors.grey),
+            style: GoogleFonts.nunito(color: Theme.of(context).colorScheme.secondary),
           ),
         ],
       ),

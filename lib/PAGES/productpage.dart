@@ -178,7 +178,10 @@ class _ProductpageState extends State<Productpage> {
                       padding: const EdgeInsets.all(8),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                        child: const Text("-", style: TextStyle(color: CustomerTheme.accent),),
+                        child: const Text(
+                          "-",
+                          style: TextStyle(color: CustomerTheme.accent),
+                        ),
                       ),
                     ),
                   ),
@@ -227,8 +230,34 @@ class _ProductpageState extends State<Productpage> {
                 ],
               )
             : OutlinedButton(
-                onPressed: () {
-                  cartProvider.addItemToCart(prodId);
+                onPressed: () async {
+                  bool isLoggedin = false;
+                  bool check = await checkAuth();
+                  setState(() {
+                    isLoggedin = check;
+                  });
+                  if (!isLoggedin) {
+                    final bool? authSuccess = await showDialog<bool>(
+                      context: context,
+                      builder: (context) {
+                        return AuthDialog(
+                          context: context,
+                          wantsLogin: wantsLogin,
+                        );
+                      },
+                    );
+
+                    // dialog dismissed or failed
+                    if (authSuccess != true) return;
+
+                    // 🔥 user JUST logged in
+                    check = await checkAuth();
+                    setState(() {
+                      isLoggedin = check;
+                    });
+                  } else {
+                    cartProvider.addItemToCart(prodId);
+                  }
                 },
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
@@ -264,9 +293,18 @@ class _ProductpageState extends State<Productpage> {
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            product.weight ?? "",
-            style: const TextStyle(color: Colors.black45),
+          Row(
+            children: [
+              Text(
+                "weight : ${product.weight}" ?? "",
+                style: const TextStyle(color: Colors.grey),
+              ),
+              const SizedBox(width: 8,),
+              Text(
+                "dimensions : ${product.dimensions}" ?? "",
+                style: const TextStyle(color: Colors.grey),
+              ),
+            ],
           ),
           const SizedBox(height: 8),
           Padding(
@@ -302,11 +340,17 @@ class _ProductpageState extends State<Productpage> {
             ),
           ),
           const SizedBox(height: 18),
-          Text('Description', style:  GoogleFonts.nunito(fontSize: 20, fontWeight: FontWeight.bold),),
+          Text(
+            'Description',
+            style: GoogleFonts.nunito(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 10),
           Text(
             product.description ?? "",
-            style: const TextStyle(color: Colors.black54),
+            style: const TextStyle(color: Colors.grey),
           ),
         ],
       ),
@@ -405,15 +449,18 @@ class _ProductpageState extends State<Productpage> {
     }
     final String api_url = dotenv.env['API_URL']!;
     return CarouselSlider(
-
       items: images.map((url) {
+        print(url);
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Image.network("${url}", width: double.infinity, fit: BoxFit.cover),
+          child: Image.network(
+            "${url}",
+            width: double.infinity,
+            fit: BoxFit.cover,
+          ),
         );
       }).toList(),
       options: CarouselOptions(
-
         height: 320,
         enlargeCenterPage: false, // WEB SAFE
         enableInfiniteScroll: true,

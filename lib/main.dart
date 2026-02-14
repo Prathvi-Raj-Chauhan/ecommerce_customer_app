@@ -9,6 +9,7 @@ import 'package:ecommerce_customer/SERVICES/getUserInstance.dart';
 import 'package:ecommerce_customer/SERVICES/setUser.dart';
 import 'package:ecommerce_customer/firebase_options.dart';
 import 'package:ecommerce_customer/theme/theme.dart';
+import 'package:ecommerce_customer/theme/themeProvider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -19,10 +20,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if(!kIsWeb){
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  if (!kIsWeb) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    await FirebaseMessaging.instance.setAutoInitEnabled(true);  
+    await FirebaseMessaging.instance.setAutoInitEnabled(true);
   }
   await dotenv.load(fileName: ".env");
   runApp(MyApp());
@@ -48,12 +51,12 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(!kIsWeb){
-          Future.microtask(() {
-      NotificationService.setNotificationProvider(
-        context.read<NotificationProvider>()
-      );
-    });
+    if (!kIsWeb) {
+      Future.microtask(() {
+        NotificationService.setNotificationProvider(
+          context.read<NotificationProvider>(),
+        );
+      });
       NotificationService().requestNotificationPermission();
       NotificationService().firebaseInit(context);
       NotificationService().setupInteractMessage(context);
@@ -67,18 +70,25 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider.value(value: User()),
         ChangeNotifierProvider(create: (_) => HomeProductsProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
       ],
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        title: 'E-Commerce',
-        theme: CustomerTheme.lightTheme,
-        darkTheme: CustomerTheme.darkTheme,
-        themeMode: ThemeMode.light,
-        routerConfig: router,
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            title: 'E-Commerce',
+            theme: CustomerTheme.lightTheme,
+            darkTheme: CustomerTheme.darkTheme,
+            themeMode: themeProvider.isDarkMode
+                ? ThemeMode.dark
+                : ThemeMode.light,
+            routerConfig: router,
+          );
+        },
       ),
     );
   }

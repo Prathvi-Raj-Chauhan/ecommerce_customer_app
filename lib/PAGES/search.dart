@@ -35,7 +35,8 @@ class _SearchPageState extends State<SearchPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.transparent,
+          toolbarHeight: 80,
           title: _searchTextField(),
         ),
         body: Padding(
@@ -46,12 +47,12 @@ class _SearchPageState extends State<SearchPage> {
               if (isLoading) {
                 return listSkeleton();
               }
-      
+
               // 2️⃣ Search results
               if (products.isNotEmpty) {
                 return _suggestionsList();
               }
-      
+
               // 3️⃣ Default empty state
               return emptySearchState();
             },
@@ -66,13 +67,13 @@ class _SearchPageState extends State<SearchPage> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        color: Colors.white,
+        color: Colors.transparent,
         child: TextField(
           textInputAction: TextInputAction.search,
-          onSubmitted: (_){
+          onSubmitted: (_) {
             String q = _searchQuery.text.trim();
-                if (q.isEmpty) return;
-                context.push('/search/list?q=$q');
+            if (q.isEmpty) return;
+            context.push('/search/list?q=$q');
           },
           controller: _searchQuery,
           onChanged: (value) {
@@ -140,7 +141,7 @@ class _SearchPageState extends State<SearchPage> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         boxShadow: const [BoxShadow(blurRadius: 6, color: Colors.black12)],
       ),
@@ -150,9 +151,14 @@ class _SearchPageState extends State<SearchPage> {
         separatorBuilder: (_, __) => const Divider(height: 1),
         itemBuilder: (context, index) {
           final product = products[index];
-
+          String productThumbnail = "";
+          if (product.thumbnail == null) {
+            productThumbnail = "https://dummyjson.com/image/15";
+          } else {
+            productThumbnail = product.thumbnail!;
+          }
           return ListTile(
-            leading: const Icon(Icons.image),
+            leading: Image.network(productThumbnail),
 
             title: Text(
               product.name,

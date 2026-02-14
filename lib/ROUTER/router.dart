@@ -1,12 +1,15 @@
 import 'package:ecommerce_customer/MODELS/DetailedProduct.dart';
+import 'package:ecommerce_customer/PAGES/accountSetting.dart';
 import 'package:ecommerce_customer/PAGES/cart.dart';
 import 'package:ecommerce_customer/PAGES/checkoutpage.dart';
 import 'package:ecommerce_customer/PAGES/checkoutpagecart.dart';
 import 'package:ecommerce_customer/PAGES/homepage.dart';
+import 'package:ecommerce_customer/PAGES/manageAddressPage.dart';
 import 'package:ecommerce_customer/PAGES/notificationHistory.dart';
 import 'package:ecommerce_customer/PAGES/orderHistoryPage.dart';
 import 'package:ecommerce_customer/PAGES/productpage.dart';
 import 'package:ecommerce_customer/PAGES/profile.dart';
+import 'package:ecommerce_customer/PAGES/resetPassword.dart';
 import 'package:ecommerce_customer/PAGES/search.dart';
 import 'package:ecommerce_customer/PAGES/searchresultpage.dart';
 import 'package:ecommerce_customer/PAGES/specificOrderPage.dart';
@@ -74,6 +77,24 @@ final GoRouter router = GoRouter(
           path: '/notifications',
           builder: (context, state) {
             return NotificationHistory();
+          },
+        ),
+        GoRoute(
+          path: '/addresses',
+          builder: (context, state) {
+            return ManageAddressPage();
+          },
+        ),
+        GoRoute(
+          path: '/account',
+          builder: (context, state) {
+            return ACcountSetting();
+          },
+        ),
+        GoRoute(
+          path: '/reset-pass',
+          builder: (context, state) {
+            return ResetPasswordPage();
           },
         ),
       ],

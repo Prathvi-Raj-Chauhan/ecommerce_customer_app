@@ -1,6 +1,8 @@
+import 'package:ecommerce_customer/COMPONENTS/themeToggle.dart';
 import 'package:ecommerce_customer/SERVICES/getUserInstance.dart';
 import 'package:ecommerce_customer/SERVICES/logout.dart';
 import 'package:ecommerce_customer/SERVICES/logoutweb.dart';
+import 'package:ecommerce_customer/theme/themeProvider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -15,7 +17,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
@@ -63,7 +64,10 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             const SizedBox(height: 12),
-            Text(userName == null ? "Please Login !" : userName, style: GoogleFonts.nunito(fontSize: 18)),
+            Text(
+              userName == null ? "Please Login !" : userName,
+              style: GoogleFonts.nunito(fontSize: 18),
+            ),
             Text(
               email == null ? "usermail@email" : email,
               style: GoogleFonts.nunito(fontSize: 16, color: Colors.grey),
@@ -82,19 +86,24 @@ class _ProfilePageState extends State<ProfilePage> {
   }) {
     return ListTile(
       onTap: onTap,
-      leading: Icon(icon, color: isLogout ? Colors.red : Colors.black87),
+      leading: Icon(
+        icon,
+        color: isLogout ? Colors.red : Theme.of(context).colorScheme.onSurface,
+      ),
       title: Text(
         title,
         style: GoogleFonts.nunito(
           fontSize: 16,
           fontWeight: FontWeight.w600,
-          color: isLogout ? Colors.red : Colors.black87,
+          color: isLogout
+              ? Colors.red
+              : Theme.of(context).colorScheme.onSurface,
         ),
       ),
       trailing: Icon(
         Icons.arrow_forward_ios,
         size: 16,
-        color: Colors.grey.shade400,
+        color: Theme.of(context).colorScheme.onSurface,
       ),
     );
   }
@@ -104,10 +113,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget options() {
+    String? userName = context.watch<User>().user?.name;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
@@ -123,13 +133,13 @@ class _ProfilePageState extends State<ProfilePage> {
             icon: Icons.settings_rounded,
             title: "Account",
             onTap: () {
-              // navigate to address page
+              context.push('/account');
             },
           ),
           _divider(),
           ListTile(
             onTap: () {
-              context.go('/orders');
+              context.push('/orders');
             },
             leading: Icon(
               Icons.shopping_cart_checkout_rounded,
@@ -154,23 +164,79 @@ class _ProfilePageState extends State<ProfilePage> {
             icon: Icons.location_on_outlined,
             title: "Manage Addresses",
             onTap: () {
-              // navigate to address page
+              context.push('/addresses');
             },
           ),
 
           _divider(),
-          _profileTile(
-            icon: Icons.logout,
-            title: "Logout",
-            isLogout: true,
-            onTap: () {
-              if (kIsWeb) {
-                logoutweb(context);
-              } else {
-                logout(context);
-              }
-            },
+          if (userName != null)
+            _profileTile(
+              icon: Icons.logout,
+              title: "Logout",
+              isLogout: true,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Log Out'),
+                      content: const Text('Are you sure You want to logout ?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('No'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            if (kIsWeb) {
+                              logoutweb(context);
+                            } else {
+                              logout(context);
+                            }
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Yes'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+          const SizedBox(height: 16),
+
+          // Theme Settings Section
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Appearance',
+                  style: GoogleFonts.nunito(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                ),
+                Consumer<ThemeProvider>(
+                  builder: (context, themeProvider, child) {
+                    return CompactThemeToggle(
+                      isDarkMode: themeProvider.isDarkMode,
+                      onToggle: (value) {
+                        themeProvider.setTheme(value);
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
+          const SizedBox(height: 12),
+
+          const SizedBox(height: 16),
         ],
       ),
     );

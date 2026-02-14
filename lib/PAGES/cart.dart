@@ -2,6 +2,7 @@ import 'package:ecommerce_customer/MODELS/cartProduct.dart';
 import 'package:ecommerce_customer/PROVIDER/CartProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'package:ecommerce_customer/theme/theme.dart';
@@ -24,11 +25,11 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Cart", style: TextStyle(color: Colors.black)),
+        title:  Text("My Cart", style: GoogleFonts.nunito(color: Theme.of(context).colorScheme.onSurface)),
         centerTitle: true,
-        backgroundColor: Colors.white,
-        foregroundColor: const Color.fromARGB(255, 234, 198, 198),
-        surfaceTintColor: const Color.fromARGB(255, 241, 221, 206),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         elevation: 20,
       ),
       body: Consumer<CartProvider>(
@@ -76,7 +77,7 @@ class CartItemTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 255, 255),
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
         border: BoxBorder.all(color: Colors.grey),
         boxShadow: [
@@ -131,7 +132,6 @@ class CartItemTile extends StatelessWidget {
                           "₹${item.product.discountedPrice}",
                           style: const TextStyle(
                             fontSize: 18,
-                            color: Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -188,7 +188,7 @@ Widget quantityButton({
       width: 32,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: filled ? CustomerTheme.accent : Colors.white,
+        color: filled ? CustomerTheme.accent : Colors.transparent,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: CustomerTheme.accent),
       ),
@@ -222,7 +222,7 @@ class CartSummary extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),

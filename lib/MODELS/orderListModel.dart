@@ -4,14 +4,14 @@ import 'package:ecommerce_customer/MODELS/orderProduct.dart';
 class OrderListModel {
   String id;
   int totalAmount;
-  Address address;
+  Address? address;
   List<OrderProduct> prods;
   String status;
   DateTime placedAt;
   String? imageUrl;
 
   OrderListModel({
-    required this.address,
+    this.address,
     required this.id,
     required this.prods,
     required this.status,
@@ -22,7 +22,7 @@ class OrderListModel {
 
   factory OrderListModel.fromJson(Map<String, dynamic> json) {
     return OrderListModel(
-      address: Address.fromJson(json['address']),
+      address: json['address'] != null ? Address.fromJson(json['address']) : null,
       id: json['_id'],
       prods: (json['products'] as List)
           .map((item) => OrderProduct.fromJson(item['product']))

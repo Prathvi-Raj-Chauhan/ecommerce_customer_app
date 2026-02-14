@@ -130,7 +130,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF8F8F8),
+      // backgroundColor: const Color(0xffF8F8F8),
       appBar: _buildAppBar(),
       body: Stack(
         children: [
@@ -172,7 +172,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                         offset: const Offset(0, 2),
                       ),
                     ],
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.background,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -183,7 +183,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                         height: 140,
                         margin: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: Theme.of(context).colorScheme.onSecondary,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: ClipRRect(
@@ -239,7 +239,6 @@ class _SearchResultPageState extends State<SearchResultPage> {
                                     style: GoogleFonts.nunito(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.black,
                                     ),
                                   ),
                                   const SizedBox(width: 8),
@@ -426,8 +425,34 @@ class _SearchResultPageState extends State<SearchResultPage> {
               )
             : Expanded(
                 child: OutlinedButton(
-                  onPressed: () {
-                    cartProvider.addItemToCart(prodId);
+                  onPressed: () async {
+                    bool isLoggedin = false;
+                    bool check = await checkAuth();
+                    setState(() {
+                      isLoggedin = check;
+                    });
+                    if (!isLoggedin) {
+                      final bool? authSuccess = await showDialog<bool>(
+                        context: context,
+                        builder: (context) {
+                          return AuthDialog(
+                            context: context,
+                            wantsLogin: wantsLogin,
+                          );
+                        },
+                      );
+
+                      // dialog dismissed or failed
+                      if (authSuccess != true) return;
+
+                      // 🔥 user JUST logged in
+                      check = await checkAuth();
+                      setState(() {
+                        isLoggedin = check;
+                      });
+                    } else {
+                      cartProvider.addItemToCart(prodId);
+                    }
                   },
                   style: OutlinedButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -452,7 +477,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        color: Colors.white,
+        color: Colors.transparent,
         child: TextField(
           textInputAction: TextInputAction.search,
           onSubmitted: (_) {
@@ -526,7 +551,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         boxShadow: const [BoxShadow(blurRadius: 6, color: Colors.black12)],
       ),
@@ -567,9 +592,9 @@ class _SearchResultPageState extends State<SearchResultPage> {
   // ================= APP BAR =================
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       elevation: 1,
-      iconTheme: const IconThemeData(color: Colors.black),
+      iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
       titleSpacing: 0,
       title: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -584,12 +609,15 @@ class _SearchResultPageState extends State<SearchResultPage> {
           },
           controller: _searchController,
           textInputAction: TextInputAction.search,
-          onSubmitted: (_) => fetchProducts(reset: true),
+          onSubmitted: (_) {
+            suggested.clear();
+            fetchProducts(reset: true);
+          },
           decoration: InputDecoration(
             hintText: 'Search products...',
             filled: true,
-            fillColor: const Color(0xffF2F2F2),
-            prefixIcon: const Icon(Icons.search, color: Colors.black54),
+            fillColor: Theme.of(context).colorScheme.surface,
+            prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.onSurface),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
@@ -721,10 +749,11 @@ class _SearchResultPageState extends State<SearchResultPage> {
     return InputDecoration(
       labelText: label,
       filled: true,
-      fillColor: const Color(0xffF6F6F6),
+      fillColor: Theme.of(context).colorScheme.surface,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none,
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface),
+        
       ),
     );
   }
