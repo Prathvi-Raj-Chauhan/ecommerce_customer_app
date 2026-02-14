@@ -53,6 +53,9 @@ This project supports **Android and Web from a single Flutter codebase**.
 * Custom theme system
 * Modern responsive layouts
 * State management using Provider
+* Uses modern skeleton loading screens
+  ![WhatsApp Image 2026-02-14 at 12 31 59 PM](https://github.com/user-attachments/assets/32289fed-659e-4e72-a275-12cf54f7c221)
+
 
 ---
 
