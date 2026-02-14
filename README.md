@@ -3,6 +3,8 @@
 A modern full-stack e-commerce application built using **Flutter** for the frontend and **Node.js + Express + MongoDB** for the backend. The app supports authentication, product browsing, cart management, secure checkout, and scalable backend APIs.
 This project supports **Android and Web from a single Flutter codebase**.
 
+Test now at https://super-haupia-a2f0fd.netlify.app/
+
 # Mobile UI
 <img width="1920" height="1080" alt="Purple Pink Gradient Mobile Application Presentation" src="https://github.com/user-attachments/assets/1a92f396-7584-4718-ba0e-2df78e0c1ff2" />
 
