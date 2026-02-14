@@ -1,13 +1,26 @@
 ## 🛒 E-Commerce Customer App (Flutter)
 
-A modern full-stack e-commerce mobile application built using **Flutter** for the frontend and **Node.js + Express + MongoDB** for the backend. The app supports authentication, product browsing, cart management, secure checkout, and scalable backend APIs.
-The best part -> this app supports web and android at same time by using powers given by flutter framework
+A modern full-stack e-commerce application built using **Flutter** for the frontend and **Node.js + Express + MongoDB** for the backend. The app supports authentication, product browsing, cart management, secure checkout, and scalable backend APIs.
+This project supports **Android and Web from a single Flutter codebase**.
+
+# Mobile UI
+<img width="1920" height="1080" alt="Purple Pink Gradient Mobile Application Presentation" src="https://github.com/user-attachments/assets/1a92f396-7584-4718-ba0e-2df78e0c1ff2" />
+
+# Web UI
+<img width="1920" height="1080" alt="Screenshot (173)" src="https://github.com/user-attachments/assets/cc0afb44-36c9-48a1-9863-cd8cdec2ea67" />
+<img width="1920" height="1080" alt="Screenshot (174)" src="https://github.com/user-attachments/assets/bd86bf96-d6d0-49d5-a058-e80ede82a38f" />
+<img width="1920" height="1080" alt="Screenshot (177)" src="https://github.com/user-attachments/assets/0c664f70-cb78-4a4e-a618-86c2a81bf18f" />
+<img width="1920" height="1080" alt="Screenshot (178)" src="https://github.com/user-attachments/assets/509189e4-e4f8-4b47-9177-b447a2b9a6c7" />
+
+
 
 ---
 
 # 🚀 Features
 
 ## Cross Platform
+
+* Single codebase for Android and Web using Flutter
 
 ## Authentication
 
@@ -34,9 +47,9 @@ The best part -> this app supports web and android at same time by using powers 
 * Product image upload (Cloudinary)
 * Support for PDFs and GIFs (planned)
 
-## 🎨 UI & UX
+## UI & UX
 
-* Clean dark theme and Light theme UI
+* Clean dark and light theme UI
 * Custom theme system
 * Modern responsive layouts
 * State management using Provider
@@ -45,76 +58,28 @@ The best part -> this app supports web and android at same time by using powers 
 
 # 🧰 Tech Stack
 
-## Frontend (Mobile App & Website) 
+## Frontend (Mobile App & Web)
 
-* **Flutter (Dart)**
+* Flutter (Dart)
 * Provider for state management
 * Dio for HTTP networking
-* Google Fonts & custom themes
+* Google Fonts and custom themes
 
 ## Backend
 
-* **Node.js + Express.js**
+* Node.js + Express.js
 * MongoDB Atlas
 * JWT authentication
 * OTP verification system
 * Cloudinary for media storage
-* MongoDB with optimized schema design
-* User, Product, Order, Cart, Address collections
-* JWT user ID decoding on frontend for lightweight auth
+* Redis for caching (homepage products)
+* MongoDB atomic transactions for order placement
 
----
+## Infrastructure (Free Tier)
 
-# 📂 Project Structure
-
-```
-ecommerce_customer/
-│
-├── lib/
-│   ├── models/
-│   ├── services/
-│   ├── components/
-│   ├── theme/
-│   ├── pages/
-│   └── main.dart
-│
-├── android/
-├── ios/
-├── assets/
-└── pubspec.yaml
-```
-
----
-
-# 🔐 App Signing & Release
-
-This project uses a **dedicated keystore** for production builds.
-
-## Build Commands
-
-### Debug
-
-```bash
-flutter run
-```
-
-### Release APK (Testing)
-
-```bash
-flutter build apk
-```
-
-### Play Store AAB (Production)
-
-```bash
-flutter build appbundle
-```
-
-Keystore details are stored in:
-
-```
-android/key.properties
-```
+* MongoDB Atlas (M0 Cluster)
+* Redis Cloud (30MB Free)
+* Cloudinary Free Tier
 
 ---
 
@@ -123,12 +88,23 @@ android/key.properties
 ## Backend
 
 * Deployed using free Node.js hosting
-* MongoDB Atlas for cloud database
+* MongoDB Atlas as primary database
 
-## Mobile App
+## Mobile & Web App
 
-* Google Play Store (AAB upload)
-* Play App Signing enabled
+* Play App Signing enabled for Android
+* Web deployed via Flutter Web build
+
+## Admin Panel
+
+* Web-based admin dashboard built in Flutter
+* Manages products, orders, users, and content
+  n---
+
+# 🔔 Notifications
+
+* Push notifications implemented for user events and order updates,
+* Uses FCM tokens and Firebase Cloud Messaging module for node js
 
 ---
 
@@ -142,21 +118,20 @@ android/key.properties
 
 # 🛠️ Planned Features
 
-* 🔔 Push notifications (Firebase)
-* 💳 Payment gateway integration (Razorpay/Stripe)
-* 📊 Admin dashboard (React web app)
-* 🧠 AI-based product recommendations
-* 🔍 Advanced filtering with debounce & URL sync
-* 📱 iOS deployment support
+* Payment gateway integration (Razorpay/Stripe)
+* Analytics dashboard for admin
+* AI-based product recommendations
 
 ---
 
 # 🧠 Developer Notes
 
-* JWT token is decoded on the frontend to extract user ID instead of headers
-* Focus on scalable free-tier infrastructure
-* Optimized for low-cost deployment and college-level scalability
-  n---
+* JWT token is not decoded on the frontend to extract user ID so it is safer
+* Redis caching used for homepage product performance
+* MongoDB atomicity ensured for order placement
+* Focus on scalable free-tier infrastructure and cost efficiency
+
+---
 
 # 📜 License
 
@@ -166,13 +141,5 @@ This project is for educational and personal portfolio use.
 
 # 👨‍💻 Author
 
-**PRC (Prathvi Chauhan)**
+Prathvi Raj Chauhan
 Flutter & Full Stack Developer
-
----
-
-# ⭐ Tips
-
-* Backup keystore files securely (Google Drive + GitHub private + USB)
-* Never change signing key after Play Store upload
-* Use environment variables for secrets in production
