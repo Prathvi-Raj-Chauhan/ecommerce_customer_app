@@ -16,7 +16,7 @@ class Dioclient {
       clientType = "web";
     }
     BaseOptions options = BaseOptions(
-      baseUrl: dotenv.env['API_URL']!,
+      baseUrl: "https://ecommerce-server-prod.onrender.com/user",
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

@@ -27,7 +27,9 @@ void main() async {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
   }
-  await dotenv.load(fileName: ".env");
+  if(!kIsWeb){
+    await dotenv.load(fileName: ".env");
+  }
   runApp(MyApp());
 }
 

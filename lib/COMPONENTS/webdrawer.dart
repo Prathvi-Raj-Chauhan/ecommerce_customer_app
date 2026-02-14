@@ -20,7 +20,7 @@ class _WebDrawerState extends State<WebDrawer> {
     return Drawer(
       shape: const BeveledRectangleBorder(),
       child: Container(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).colorScheme.surface,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +32,6 @@ class _WebDrawerState extends State<WebDrawer> {
                   style: GoogleFonts.nunito(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
                   ),
                 ),
               ),
@@ -183,7 +182,7 @@ class _WebDrawerState extends State<WebDrawer> {
             }
           },
           borderRadius: BorderRadius.circular(12),
-          hoverColor: Theme.of(context).colorScheme.surface,
+          hoverColor: Theme.of(context).colorScheme.secondary,
 
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -191,14 +190,13 @@ class _WebDrawerState extends State<WebDrawer> {
               // crossAxisAlignment: CrossAxisAlignment.,
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(icon, color: Colors.black, size: 18),
+                Icon(icon, size: 18),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     content,
                     style: GoogleFonts.nunito(
                       fontSize: 16,
-                      color: Colors.black,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
